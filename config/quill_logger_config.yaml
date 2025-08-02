@@ -1,0 +1,35 @@
+# Quill Logger Configuration
+# This file contains configuration parameters for the Quill-based ROS2 logger
+
+quill_logger:
+  ros__parameters:
+    # Log file configuration
+    log_file_path: "/tmp/ros2_quill.log"
+    max_file_size: 10485760  # 10MB in bytes
+    max_files: 5
+    
+    # Log level configuration
+    log_level: "INFO"  # DEBUG, INFO, WARN, ERROR, FATAL
+    
+    # Output configuration
+    enable_console_output: true
+    enable_file_output: true
+    
+    # Log format configuration
+    log_format: "{time} [{level}] {logger} - {message}"
+    
+    # Performance configuration
+    backend_thread_sleep_duration_ns: 100000  # 100 microseconds
+    backend_thread_cpu_affinity: 0
+    
+    # Console colors
+    enable_console_colors: true
+    
+    # Timestamp format
+    timestamp_format: "%Y-%m-%d %H:%M:%S.%Q"
+    
+    # Node-specific overrides
+    node_overrides:
+      # Example: Set specific log level for a node
+      # "my_node": "DEBUG"
+      # "another_node": "WARN" 
