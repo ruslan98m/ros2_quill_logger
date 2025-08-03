@@ -2,7 +2,7 @@
  * @file test_quill_logger_performance.cpp
  * @brief Performance tests for quill_logger
  * @author Ruslan Mambetov
- * @date 2024
+ * @date 2025
  * @version 1.0.0
  * @license MIT License
  */

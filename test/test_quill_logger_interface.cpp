@@ -2,7 +2,7 @@
  * @file test_quill_logger_interface.cpp
  * @brief Unit tests for quill_logger ROS2 interface
  * @author Ruslan Mambetov
- * @date 2024
+ * @date 2025
  * @version 1.0.0
  * @license MIT License
  */

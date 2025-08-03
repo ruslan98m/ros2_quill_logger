@@ -2,7 +2,7 @@
  * @file quill_logger.cpp
  * @brief Implementation of the Quill-based ROS2 logger
  * @author Ruslan Mambetov
- * @date 2024
+ * @date 2025
  * @version 1.0.0
  * @license MIT License
  */

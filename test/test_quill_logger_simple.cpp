@@ -2,7 +2,7 @@
  * @file test_quill_logger_simple.cpp
  * @brief Simple unit tests for quill_logger without external dependencies
  * @author Ruslan Mambetov
- * @date 2024
+ * @date 2025
  * @version 1.0.0
  * @license MIT License
  */

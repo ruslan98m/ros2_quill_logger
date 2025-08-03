@@ -1,8 +1,8 @@
 /**
  * @file quill_logger_interface.cpp
  * @brief Implementation of ROS2 logging interface integration
- * @author ROS2 Control Development Team
- * @date 2024
+ * @author Ruslan Mambetov
+ * @date 2025
  * @version 1.0.0
  * @license MIT License
  */
