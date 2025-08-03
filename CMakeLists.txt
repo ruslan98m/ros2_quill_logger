@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(quill_logger)
 
-set(CMAKE_INSTALL_PREFIX "/usr")
-
 # Author: Ruslan Mambetov
 # High-performance ROS2 logging system using Quill library
 

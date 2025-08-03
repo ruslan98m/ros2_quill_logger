@@ -41,7 +41,7 @@ if ! pkg-config --exists rclcpp; then
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
     sudo apt-get update
     sudo apt-get install -y ros-humble-desktop
-    sudo apt-get install -y ros-humble-rclcpp-dev ros-humble-rcl-dev ros-humble-rcutils-dev ros-humble-rosidl-runtime-c-dev
+    sudo apt-get install -y ros-humble-rclcpp ros-humble-rcl ros-humble-rcutils ros-humble-rosidl-runtime-c
 fi
 
 # Install Quill library if not already installed
@@ -58,7 +58,7 @@ fi
 
 # Check dependencies
 echo "🔍 Checking dependencies..."
-if pkg-config --exists rclcpp; then
+if [ -d "/opt/ros/humble" ]; then
     echo "✅ ROS2 Humble found"
 else
     echo "❌ ROS2 Humble not found"

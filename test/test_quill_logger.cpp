@@ -173,8 +173,7 @@ TEST_F(QuillLoggerTest, RealtimePerformanceMode) {
   LoggerConfig config;
   config.enable_backend_performance_mode = true;
   config.backend_thread_sleep_duration_ns = 50000;
-  config.backend_thread_cpu_affinity = 1;
-  config.backend_thread_priority = 80;
+  // Don't set CPU affinity and priority in tests as they may fail without proper permissions
   config.enable_file_output = false;
   config.log_level = "WARN";
   
