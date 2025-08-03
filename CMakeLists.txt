@@ -63,6 +63,11 @@ add_library(${PROJECT_NAME}
   src/quill_logger_interface.cpp
 )
 
+add_executable(test_node src/test_node.cpp)
+target_link_libraries(test_node ${PROJECT_NAME} Quill::Quill)
+ament_target_dependencies(test_node rclcpp rcl rcutils)
+install(TARGETS test_node DESTINATION lib/${PROJECT_NAME})
+
 # Link libraries - only ROS2 dependencies for the main library
 target_link_libraries(${PROJECT_NAME}
   ${rclcpp_LIBRARIES}
