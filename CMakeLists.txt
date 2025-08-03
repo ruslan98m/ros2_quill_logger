@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.8)
 project(quill_logger)
 
+set(CMAKE_INSTALL_PREFIX "/usr")
+
 # Author: Ruslan Mambetov
 # High-performance ROS2 logging system using Quill library
 
@@ -88,40 +90,6 @@ ament_export_dependencies(rclcpp)
 ament_export_dependencies(rcl)
 ament_export_dependencies(rcutils)
 ament_export_dependencies(rosidl_runtime_c)
-
-# Create a simple test node
-add_executable(quill_logger_test_node
-  src/test_node.cpp
-)
-
-target_link_libraries(quill_logger_test_node
-  ${PROJECT_NAME}
-)
-
-ament_target_dependencies(quill_logger_test_node
-  rclcpp
-)
-
-install(TARGETS quill_logger_test_node
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-# Create simple node example
-add_executable(simple_node_example
-  examples/auto_replace_example.cpp
-)
-
-target_link_libraries(simple_node_example
-  ${PROJECT_NAME}
-)
-
-ament_target_dependencies(simple_node_example
-  rclcpp
-)
-
-install(TARGETS simple_node_example
-  DESTINATION lib/${PROJECT_NAME}
-)
 
 # Testing
 if(BUILD_TESTING)

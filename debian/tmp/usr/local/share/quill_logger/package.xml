@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>quill_logger</name>
+  <version>1.0.0</version>
+  <description>High-performance ROS2 logging system using Quill library</description>
+  <maintainer email="ruslan.mambetov@example.com">Ruslan Mambetov</maintainer>
+  <license>MIT</license>
+
+  <url type="website">https://github.com/ruslanmambetov/quill_logger</url>
+  <url type="bugtracker">https://github.com/ruslanmambetov/quill_logger/issues</url>
+  <url type="repository">https://github.com/ruslanmambetov/quill_logger.git</url>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_auto</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>rcl</depend>
+  <depend>rcutils</depend>
+  <depend>rosidl_runtime_c</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package> 
