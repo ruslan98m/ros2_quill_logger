@@ -319,6 +319,9 @@ TEST_F(QuillLoggerTest, InvalidFilePath) {
   bool result = logger->initialize(config);
   EXPECT_TRUE(result);
   EXPECT_TRUE(logger->isInitialized());
+  
+  // Should have fallback to console output
+  EXPECT_EQ(logger->getLogLevel(), LogLevel::INFO);
 }
 
 int main(int argc, char** argv) {

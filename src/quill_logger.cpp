@@ -135,8 +135,16 @@ bool QuillLogger::initialize(const LoggerConfig& config) {
 
     // Add file sink if enabled
     if (config_.enable_file_output) {
-      auto file_sink = std::make_shared<quill::FileSink>(config_.log_file_path);
-      sinks.push_back(file_sink);
+      try {
+        auto file_sink = std::make_shared<quill::FileSink>(config_.log_file_path);
+        sinks.push_back(file_sink);
+      } catch (const std::exception& e) {
+        // If file sink creation fails, fallback to console
+        std::cerr << "Failed to create file sink: " << e.what() << std::endl;
+        std::cerr << "Falling back to console output" << std::endl;
+        config_.enable_file_output = false;
+        config_.enable_console_output = true;
+      }
     }
 
     // Create the logger

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="17" failures="1" disabled="0" errors="0" time="0.103" timestamp="2025-08-03T13:30:49" name="AllTests">
+  <testsuite name="QuillLoggerTest" tests="17" failures="1" disabled="0" errors="0" time="0.103" timestamp="2025-08-03T13:30:49">
+    <testcase name="SingletonPattern" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="DefaultInitialization" status="run" result="completed" time="0.001" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="CustomConfigurationInitialization" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="LogLevelSetting" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="InvalidLogLevelString" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="FileOutput" status="run" result="completed" time="0.101" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="ConsoleOutputOnly" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="RealtimePerformanceMode" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="MultipleInitializations" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="Shutdown" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="GetLogger" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="Flush" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="LogLevelConversion" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="ConfigurationPersistence" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="ThreadSafety" status="run" result="completed" time="0.001" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="InitializationPerformance" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest" />
+    <testcase name="InvalidFilePath" status="run" result="completed" time="0" timestamp="2025-08-03T13:30:49" classname="QuillLoggerTest">
+      <failure message="/home/pc/docker/workspace/src/quill_logger/test/test_quill_logger.cpp:320&#x0A;Value of: result&#x0A;  Actual: false&#x0A;Expected: true" type=""><![CDATA[/home/pc/docker/workspace/src/quill_logger/test/test_quill_logger.cpp:320
+Value of: result
+  Actual: false
+Expected: true]]></failure>
+      <failure message="/home/pc/docker/workspace/src/quill_logger/test/test_quill_logger.cpp:321&#x0A;Value of: logger-&gt;isInitialized()&#x0A;  Actual: false&#x0A;Expected: true" type=""><![CDATA[/home/pc/docker/workspace/src/quill_logger/test/test_quill_logger.cpp:321
+Value of: logger->isInitialized()
+  Actual: false
+Expected: true]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
