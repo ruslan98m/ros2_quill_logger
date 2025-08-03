@@ -5,7 +5,7 @@
   <version>1.0.0</version>
   <description>High-performance ROS2 logging system using Quill library</description>
   <maintainer email="ruslan.mambetov@example.com">Ruslan Mambetov</maintainer>
-  <license>Apache License 2.0</license>
+  <license>MIT</license>
 
   <url type="website">https://github.com/ruslanmambetov/quill_logger</url>
   <url type="bugtracker">https://github.com/ruslanmambetov/quill_logger/issues</url>

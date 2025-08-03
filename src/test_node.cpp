@@ -4,7 +4,7 @@
  * @author Ruslan Mambetov
  * @date 2024
  * @version 1.0.0
- * @license Apache License 2.0
+ * @license MIT License
  */
 
 #include <chrono>

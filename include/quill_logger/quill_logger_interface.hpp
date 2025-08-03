@@ -4,7 +4,7 @@
  * @author ROS2 Control Development Team
  * @date 2024
  * @version 1.0.0
- * @license Apache License 2.0
+ * @license MIT License
  */
 
 #ifndef QUILL_LOGGER_INTERFACE_HPP_
