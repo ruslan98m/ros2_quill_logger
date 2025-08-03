@@ -2,9 +2,8 @@
  * @file test_node.cpp
  * @brief Test node demonstrating the Quill logger functionality
  * @author Ruslan Mambetov
- * @date 2024
- * @version 1.0.0
- * @license Apache License 2.0
+ * @date 2025
+ * @license MIT
  */
 
 #include <chrono>
