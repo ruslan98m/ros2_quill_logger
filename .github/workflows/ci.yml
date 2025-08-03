@@ -14,30 +14,18 @@ jobs:
         ros-distro: [humble, iron]
         compiler: [gcc]
     
+    container:
+      image: osrf/ros:${{ matrix.ros-distro }}-desktop
+      options: --user root
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup ROS2 ${{ matrix.ros-distro }}
-      run: |
-        # Add ROS2 repository
-        sudo apt update && sudo apt install software-properties-common
-        sudo add-apt-repository universe
-        sudo apt update && sudo apt install curl
-        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-        
-        # Install ROS2
-        sudo apt update
-        sudo apt install -y ros-${{ matrix.ros-distro }}-desktop
-        
-        # Source ROS2
-        echo "source /opt/ros/${{ matrix.ros-distro }}/setup.bash" >> $GITHUB_ENV
-
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y \
+        apt-get update
+        apt-get install -y \
           build-essential \
           cmake \
           git \
@@ -52,8 +40,8 @@ jobs:
         mkdir build && cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release
         make -j$(nproc)
-        sudo make install
-        sudo ldconfig
+        make install
+        ldconfig
 
     - name: Build package
       run: |
@@ -67,30 +55,18 @@ jobs:
       matrix:
         ros-distro: [humble]
     
+    container:
+      image: osrf/ros:${{ matrix.ros-distro }}-desktop
+      options: --user root
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup ROS2 ${{ matrix.ros-distro }}
-      run: |
-        # Add ROS2 repository
-        sudo apt update && sudo apt install software-properties-common
-        sudo add-apt-repository universe
-        sudo apt update && sudo apt install curl
-        sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
-        
-        # Install ROS2
-        sudo apt update
-        sudo apt install -y ros-${{ matrix.ros-distro }}-desktop
-        
-        # Source ROS2
-        echo "source /opt/ros/${{ matrix.ros-distro }}/setup.bash" >> $GITHUB_ENV
-
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y \
+        apt-get update
+        apt-get install -y \
           build-essential \
           cmake \
           git \
@@ -105,8 +81,8 @@ jobs:
         mkdir build && cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release
         make -j$(nproc)
-        sudo make install
-        sudo ldconfig
+        make install
+        ldconfig
 
     - name: Build and test
       run: |
