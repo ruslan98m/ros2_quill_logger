@@ -52,6 +52,12 @@ struct LoggerConfig {
   std::string log_format = "{time} [{level}] {logger} - {message}";  ///< Log message format
   size_t max_file_size = 10 * 1024 * 1024;  ///< Maximum log file size in bytes
   size_t max_files = 5;                     ///< Maximum number of log files to keep
+  
+  // Realtime performance settings for Backend thread
+  uint64_t backend_thread_sleep_duration_ns = 100000;  ///< Backend thread sleep duration in nanoseconds (100 microseconds default)
+  int backend_thread_cpu_affinity = -1;                ///< CPU affinity for backend thread (-1 = no affinity)
+  int backend_thread_priority = -1;                    ///< Thread priority for backend (-1 = default priority)
+  bool enable_backend_performance_mode = false;        ///< Enable high-performance mode for realtime systems
 };
 
 /**

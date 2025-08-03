@@ -71,6 +71,16 @@ install(DIRECTORY include/
   DESTINATION include
 )
 
+# Install configuration files
+install(DIRECTORY config/
+  DESTINATION share/${PROJECT_NAME}/config
+)
+
+# Install pkg-config file
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/quill_logger.pc
+  DESTINATION lib/pkgconfig
+)
+
 # Export the library
 ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(ament_cmake)
@@ -113,14 +123,76 @@ install(TARGETS simple_node_example
   DESTINATION lib/${PROJECT_NAME}
 )
 
-# Install configuration files
-install(DIRECTORY config/
-  DESTINATION share/${PROJECT_NAME}/config
-)
-
+# Testing
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
+  find_package(ament_cmake_gtest REQUIRED)
   ament_lint_auto_find_test_dependencies()
+  
+  # Check for gmock (optional)
+  find_package(ament_cmake_gmock QUIET)
+  
+  # Unit tests
+  ament_add_gtest(test_quill_logger
+    test/test_quill_logger.cpp
+  )
+  
+  target_link_libraries(test_quill_logger
+    ${PROJECT_NAME}
+  )
+  
+  ament_target_dependencies(test_quill_logger
+    rclcpp
+    rcl
+    rcutils
+  )
+  
+  # Simple tests (no ROS2 dependencies)
+  ament_add_gtest(test_quill_logger_simple
+    test/test_quill_logger_simple.cpp
+  )
+  
+  target_link_libraries(test_quill_logger_simple
+    ${PROJECT_NAME}
+  )
+  
+  # ROS2 interface tests
+  ament_add_gtest(test_quill_logger_interface
+    test/test_quill_logger_interface.cpp
+  )
+  
+  target_link_libraries(test_quill_logger_interface
+    ${PROJECT_NAME}
+  )
+  
+  ament_target_dependencies(test_quill_logger_interface
+    rclcpp
+    rcl
+    rcutils
+  )
+  
+  # Performance tests (optional - requires benchmark library)
+  find_package(benchmark QUIET)
+  if(benchmark_FOUND)
+    ament_add_gtest(test_quill_logger_performance
+      test/test_quill_logger_performance.cpp
+    )
+    
+    target_link_libraries(test_quill_logger_performance
+      ${PROJECT_NAME}
+      benchmark::benchmark
+    )
+    
+    ament_target_dependencies(test_quill_logger_performance
+      rclcpp
+      rcl
+      rcutils
+    )
+    
+    target_compile_definitions(test_quill_logger_performance PRIVATE BENCHMARK_FOUND)
+  else()
+    message(STATUS "benchmark library not found - skipping performance tests")
+  endif()
 endif()
 
 ament_package() 

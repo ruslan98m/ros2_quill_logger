@@ -32,13 +32,19 @@ class QuillLoggerTestNode : public rclcpp::Node {
     // Initialize the Quill logger
     auto logger = quill_logger::QuillLogger::getInstance();
 
-    // Configure the logger
+    // Configure the logger with realtime optimizations
     quill_logger::LoggerConfig config;
     config.log_file_path = "";  // Use ROS2 standard log directory
     config.log_level = "DEBUG";
     config.enable_console_output = true;
     config.enable_file_output = true;
     config.log_format = "{time} [{level}] {logger} - {message}";
+    
+    // Realtime performance settings - DISABLED for testing
+    config.enable_backend_performance_mode = true;
+    config.backend_thread_sleep_duration_ns = 50000;  // 50 microseconds
+    config.backend_thread_cpu_affinity = 1;           // Use CPU core 1
+    config.backend_thread_priority = 80;              // High priority
 
     if (!logger->initialize(config)) {
       RCLCPP_ERROR(this->get_logger(), "Failed to initialize Quill logger");

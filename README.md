@@ -12,6 +12,25 @@ A high-performance ROS2 logging system using the Quill library that provides con
 - 📁 **File Rotation** - Automatic log file management
 - 🔧 **Flexible Configuration** - Multiple configuration options
 - 🔄 **Full Compatibility** - Complete ROS2 logging API compatibility
+- 🚀 **Realtime Optimized** - Configurable backend thread for realtime systems
+
+## Realtime Performance
+
+This library is optimized for realtime systems with configurable backend thread settings:
+
+- **CPU Affinity**: Bind backend thread to specific CPU core
+- **Thread Priority**: Set SCHED_FIFO priority for backend thread  
+- **Sleep Duration**: Configure backend thread response time
+- **Performance Mode**: Enable/disable realtime optimizations
+
+**Quick realtime setup:**
+```bash
+# Setup system for realtime (requires sudo)
+sudo ./scripts/setup_realtime.sh
+
+# Use realtime configuration
+ros2 run quill_logger quill_logger_test_node --ros-args --params-file config/quill_logger_realtime_config.yaml
+```
 
 ## Quick Start
 
@@ -53,7 +72,45 @@ ros2 run quill_logger simple_node_example
 
 ## Installation
 
-### 1. Add Dependency
+### Method 1: APT Package (Recommended)
+
+Build and install the debian package:
+
+```bash
+# Build the package
+./scripts/build_deb.sh
+
+# Install the package
+sudo dpkg -i ../libquill-logger-dev_*.deb
+sudo dpkg -i ../quill-logger-demo_*.deb
+sudo apt-get install -f  # Install missing dependencies
+```
+
+### Method 2: From Source
+
+#### Prerequisites
+
+- ROS2 Humble
+- Quill library
+- CMake 3.8+
+- Build tools (gcc, make, etc.)
+
+#### Build Instructions
+
+```bash
+# Clone the repository
+git clone https://github.com/ruslanmambetov/quill_logger.git
+cd quill_logger
+
+# Build
+source /opt/ros/humble/setup.bash
+colcon build --packages-select quill_logger
+
+# Install
+source install/setup.bash
+```
+
+### Method 3: Automatic Replacement in Code (Recommended)
 
 In `package.xml`:
 ```xml
@@ -103,6 +160,36 @@ auto logger = quill_logger::QuillLogger::getInstance();
 logger->initialize(config);
 ```
 
+### Realtime Performance Settings
+
+For realtime systems, you can optimize the backend thread performance:
+
+```cpp
+quill_logger::LoggerConfig config;
+config.enable_backend_performance_mode = true;     // Enable realtime optimizations
+config.backend_thread_sleep_duration_ns = 50000;  // 50 microseconds (faster response)
+config.backend_thread_cpu_affinity = 1;           // Use CPU core 1
+config.backend_thread_priority = 80;              // High priority (SCHED_FIFO)
+
+auto logger = quill_logger::QuillLogger::getInstance();
+logger->initialize(config);
+```
+
+**Realtime Configuration Options:**
+- `enable_backend_performance_mode`: Enable realtime optimizations
+- `backend_thread_sleep_duration_ns`: Backend thread sleep duration (lower = faster response)
+- `backend_thread_cpu_affinity`: CPU core to bind backend thread (-1 = no affinity)
+- `backend_thread_priority`: Thread priority 1-99 for SCHED_FIFO (-1 = default)
+
+**Recommended settings for realtime systems:**
+```yaml
+enable_backend_performance_mode: true
+backend_thread_sleep_duration_ns: 50000  # 50 microseconds
+backend_thread_cpu_affinity: 1           # Dedicated CPU core
+backend_thread_priority: 80              # High priority
+enable_file_output: false                # Disable file I/O for maximum performance
+```
+
 ### Runtime Configuration
 
 ```cpp
@@ -132,60 +219,10 @@ Example output:
 - **`quill_logger_test_node`** - Test node for functionality verification
 - **`simple_node_example`** - Example of automatic replacement
 
-## Troubleshooting
+## Testing
 
-### Problem: Logs don't appear
+The library includes comprehensive unit tests to ensure reliability and performance:
 
-**Solution**: Ensure Quill logger is initialized before creating nodes:
+### Running Tests
 
-```cpp
-// ✅ Correct
-auto logger = quill_logger::QuillLogger::getInstance();
-logger->initialize();
-auto node = std::make_shared<rclcpp::Node>("my_node");
-
-// ❌ Incorrect
-auto node = std::make_shared<rclcpp::Node>("my_node");
-auto logger = quill_logger::QuillLogger::getInstance();
-logger->initialize();
 ```
-
-### Problem: Log file not created
-
-**Solution**: Check permissions and path:
-
-```cpp
-config.log_file_path = "/tmp/my_app.log";  // Ensure directory exists
-```
-
-### Problem: Low performance
-
-**Solution**: Configure log level:
-
-```cpp
-config.log_level = "INFO";  // Instead of DEBUG for production
-```
-
-## Quick Test
-
-```bash
-# 1. Build the package
-colcon build --packages-select quill_logger
-
-# 2. Source the workspace
-source install/setup.bash
-
-# 3. Run the test
-ros2 run quill_logger quill_logger_test_node
-
-# 4. Check the log file
-tail -f ~/.ros/log/quill_logger_*.log
-```
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## Author
-
-**Ruslan Mambetov** - High-performance ROS2 logging system using Quill library 

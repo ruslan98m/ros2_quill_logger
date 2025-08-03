@@ -18,9 +18,11 @@ quill_logger:
     # Log format configuration
     log_format: "{time} [{level}] {logger} - {message}"
     
-    # Performance configuration
-    backend_thread_sleep_duration_ns: 100000  # 100 microseconds
-    backend_thread_cpu_affinity: 0
+    # Realtime performance configuration
+    enable_backend_performance_mode: false  # Enable for realtime systems
+    backend_thread_sleep_duration_ns: 50000  # 50 microseconds for realtime
+    backend_thread_cpu_affinity: -1  # -1 = no affinity, 0+ = specific CPU
+    backend_thread_priority: -1  # -1 = default, 1-99 = SCHED_FIFO priority
     
     # Console colors
     enable_console_colors: true

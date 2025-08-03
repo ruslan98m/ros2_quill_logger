@@ -1,0 +1,33 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- -DBUILD_TESTING=OFF
+
+override_dh_auto_install:
+	dh_auto_install
+	# Install headers
+	mkdir -p debian/libquill-logger-dev/usr/include/quill_logger
+	cp -r include/quill_logger/* debian/libquill-logger-dev/usr/include/quill_logger/
+	# Install library
+	mkdir -p debian/libquill-logger-dev/usr/lib
+	cp build/libquill_logger.so debian/libquill-logger-dev/usr/lib/
+	# Install demo applications
+	mkdir -p debian/quill-logger-demo/usr/bin
+	cp build/quill_logger_test_node debian/quill-logger-demo/usr/bin/
+	cp build/simple_node_example debian/quill-logger-demo/usr/bin/
+	# Install configuration files
+	mkdir -p debian/libquill-logger-dev/usr/share/quill_logger/config
+	cp -r config/* debian/libquill-logger-dev/usr/share/quill_logger/config/
+	# Install documentation
+	mkdir -p debian/libquill-logger-dev/usr/share/doc/quill-logger
+	cp README.md debian/libquill-logger-dev/usr/share/doc/quill-logger/
+	cp LICENSE debian/libquill-logger-dev/usr/share/doc/quill-logger/
+	# Install pkg-config file
+	mkdir -p debian/libquill-logger-dev/usr/lib/pkgconfig
+	cp quill_logger.pc debian/libquill-logger-dev/usr/lib/pkgconfig/
+
+override_dh_strip:
+	dh_strip --dbg-package=quill-logger-dbg 

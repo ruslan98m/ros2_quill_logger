@@ -16,6 +16,9 @@
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <thread>
+#include <pthread.h>
+#include <sched.h>
 #include "quill_logger/quill_logger_interface.hpp"
 
 namespace quill_logger {
@@ -49,6 +52,33 @@ std::string generateLogTimestamp() {
   return oss.str();
 }
 
+// Helper function to configure Backend thread for realtime performance
+void configureBackendThread(const LoggerConfig& config) {
+  if (config.enable_backend_performance_mode) {
+    // Set CPU affinity if specified
+    if (config.backend_thread_cpu_affinity >= 0) {
+      cpu_set_t cpuset;
+      CPU_ZERO(&cpuset);
+      CPU_SET(config.backend_thread_cpu_affinity, &cpuset);
+      
+      pthread_t current_thread = pthread_self();
+      if (pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset) != 0) {
+        std::cerr << "Warning: Failed to set CPU affinity for backend thread" << std::endl;
+      }
+    }
+    
+    // Set thread priority if specified
+    if (config.backend_thread_priority >= 0) {
+      struct sched_param param;
+      param.sched_priority = config.backend_thread_priority;
+      
+      if (pthread_setschedparam(pthread_self(), SCHED_FIFO, &param) != 0) {
+        std::cerr << "Warning: Failed to set thread priority for backend thread" << std::endl;
+      }
+    }
+  }
+}
+
 // Static member initialization
 std::shared_ptr<QuillLogger> QuillLogger::instance_ = nullptr;
 std::mutex QuillLogger::instance_mutex_;
@@ -80,8 +110,19 @@ bool QuillLogger::initialize(const LoggerConfig& config) {
   }
 
   try {
-    // Start the Quill backend
-    quill::Backend::start();
+    // Configure backend thread for realtime performance if enabled
+    configureBackendThread(config_);
+    
+    // Start the Quill backend with custom configuration
+    if (config_.enable_backend_performance_mode) {
+      // Use custom sleep duration for realtime systems
+      quill::BackendOptions backend_options;
+      backend_options.sleep_duration = std::chrono::nanoseconds(config_.backend_thread_sleep_duration_ns);
+      quill::Backend::start(backend_options);
+    } else {
+      // Use default backend configuration
+      quill::Backend::start();
+    }
 
     // Create sinks
     std::vector<std::shared_ptr<quill::Sink>> sinks;
@@ -124,6 +165,18 @@ bool QuillLogger::initialize(const LoggerConfig& config) {
     LOG_INFO(logger_, "Quill logger initialized successfully");
     LOG_INFO(logger_, "Log file: {}", config_.log_file_path);
     LOG_INFO(logger_, "Log level: {}", config_.log_level);
+    
+    // Log backend configuration if performance mode is enabled
+    if (config_.enable_backend_performance_mode) {
+      LOG_INFO(logger_, "Backend performance mode enabled");
+      LOG_INFO(logger_, "Backend sleep duration: {} ns", config_.backend_thread_sleep_duration_ns);
+      if (config_.backend_thread_cpu_affinity >= 0) {
+        LOG_INFO(logger_, "Backend CPU affinity: {}", config_.backend_thread_cpu_affinity);
+      }
+      if (config_.backend_thread_priority >= 0) {
+        LOG_INFO(logger_, "Backend thread priority: {}", config_.backend_thread_priority);
+      }
+    }
 
     return true;
 

@@ -1,0 +1,52 @@
+Source: quill-logger
+Section: devel
+Priority: optional
+Maintainer: Ruslan Mambetov <ruslan.mambetov@example.com>
+Build-Depends: debhelper (>= 11),
+               cmake (>= 3.8),
+               libquill-dev,
+               ros-humble-rclcpp-dev,
+               ros-humble-rcl-dev,
+               ros-humble-rcutils-dev,
+               ros-humble-rosidl-runtime-c-dev,
+               libgtest-dev,
+               pkg-config
+
+Package: libquill-logger-dev
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         libquill-dev,
+         ros-humble-rclcpp-dev,
+         ros-humble-rcl-dev,
+         ros-humble-rcutils-dev,
+         ros-humble-rosidl-runtime-c-dev
+Description: High-performance ROS2 logging system using Quill library
+ This package provides a high-performance ROS2 logging system based on the Quill library.
+ It can be used as a drop-in replacement for the default ROS2 logger with improved
+ performance and realtime capabilities.
+ .
+ Features:
+  - Asynchronous logging with minimal overhead
+  - Configurable output formats
+  - Realtime performance optimizations
+  - Full ROS2 logging API compatibility
+  - Thread-safe implementation
+
+Package: quill-logger-demo
+Architecture: any
+Depends: ${misc:Depends},
+         ${shlibs:Depends},
+         libquill-logger-dev,
+         ros-humble-rclcpp
+Description: Demo applications for quill-logger
+ This package contains demonstration applications and examples for the quill-logger
+ library, including test nodes and usage examples.
+
+Package: quill-logger-dbg
+Architecture: any
+Section: debug
+Depends: ${misc:Depends},
+         libquill-logger-dev (= ${binary:Version})
+Description: Debug symbols for quill-logger
+ This package contains debug symbols for the quill-logger library. 
