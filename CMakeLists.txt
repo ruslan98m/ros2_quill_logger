@@ -46,6 +46,11 @@ if(NOT Quill_FOUND)
   endif()
 endif()
 
+# Ensure Quill::Quill target exists
+if(NOT TARGET Quill::Quill)
+  message(FATAL_ERROR "Quill::Quill target not found after search")
+endif()
+
 # Enable automatic dependency management
 ament_auto_find_build_dependencies()
 
@@ -58,20 +63,23 @@ add_library(${PROJECT_NAME}
   src/quill_logger_interface.cpp
 )
 
-# Link libraries
+# Link libraries - only ROS2 dependencies for the main library
 target_link_libraries(${PROJECT_NAME}
-  Quill::Quill
   ${rclcpp_LIBRARIES}
   ${rcl_LIBRARIES}
   ${rcutils_LIBRARIES}
   ${rosidl_runtime_c_LIBRARIES}
 )
 
-# Include directories for the library
+# Add Quill include directories to the library
 target_include_directories(${PROJECT_NAME} PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${QUILL_INCLUDE_DIR}>
+  $<INSTALL_INTERFACE:include>
 )
+
+
 
 # Export dependencies
 ament_target_dependencies(${PROJECT_NAME}
@@ -126,6 +134,7 @@ if(BUILD_TESTING)
   
   target_link_libraries(test_quill_logger
     ${PROJECT_NAME}
+    Quill::Quill
   )
   
   ament_target_dependencies(test_quill_logger
@@ -141,6 +150,7 @@ if(BUILD_TESTING)
   
   target_link_libraries(test_quill_logger_simple
     ${PROJECT_NAME}
+    Quill::Quill
   )
   
   # ROS2 interface tests
@@ -150,6 +160,7 @@ if(BUILD_TESTING)
   
   target_link_libraries(test_quill_logger_interface
     ${PROJECT_NAME}
+    Quill::Quill
   )
   
   ament_target_dependencies(test_quill_logger_interface
@@ -167,6 +178,7 @@ if(BUILD_TESTING)
     
     target_link_libraries(test_quill_logger_performance
       ${PROJECT_NAME}
+      Quill::Quill
       benchmark::benchmark
     )
     
