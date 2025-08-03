@@ -2,7 +2,7 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>quill_logger</name>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <description>High-performance ROS2 logging system using Quill library</description>
   <maintainer email="ruslan.mambetov@example.com">Ruslan Mambetov</maintainer>
   <license>MIT</license>

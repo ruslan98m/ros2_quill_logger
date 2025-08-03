@@ -27,9 +27,9 @@ jobs:
           pkg-config \
           python3-colcon-common-extensions
 
-    - name: Install Quill library
+    - name: Build and test
       run: |
-        # Clone and build Quill from source
+        # Install Quill library
         git clone https://github.com/odygrd/quill.git
         cd quill
         mkdir build && cd build
@@ -37,20 +37,11 @@ jobs:
         make -j$(nproc)
         make install
         ldconfig
-
-    - name: Build package
-      run: |
+        cd ../..
+        
+        # Build and test package
         . /opt/ros/humble/setup.sh
         colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-
-    - name: Run tests
-      run: |
-        . /opt/ros/humble/setup.sh
         . install/setup.sh
         colcon test --event-handlers console_direct+
-
-    - name: Check test results
-      run: |
-        . /opt/ros/humble/setup.sh
-        . install/setup.sh
         colcon test-result --all 

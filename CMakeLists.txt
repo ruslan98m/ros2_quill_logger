@@ -19,8 +19,32 @@ find_package(rosidl_runtime_c REQUIRED)
 # Add cmake modules path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
-# Find Quill library
-find_package(Quill REQUIRED)
+# Find Quill library - try multiple methods
+find_package(Quill QUIET)
+if(NOT Quill_FOUND)
+  # Try to find Quill manually
+  find_path(QUILL_INCLUDE_DIR
+    NAMES quill/LogMacros.h
+    PATHS
+      /usr/local/include
+      /usr/include
+      /opt/local/include
+      /sw/include
+  )
+  
+  if(QUILL_INCLUDE_DIR)
+    message(STATUS "Found Quill manually: ${QUILL_INCLUDE_DIR}")
+    # Create imported target
+    add_library(Quill::Quill INTERFACE IMPORTED)
+    set_target_properties(Quill::Quill PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${QUILL_INCLUDE_DIR}"
+      INTERFACE_COMPILE_FEATURES "cxx_std_17"
+    )
+    set(Quill_FOUND TRUE)
+  else()
+    message(FATAL_ERROR "Quill library not found. Please install it first.")
+  endif()
+endif()
 
 # Enable automatic dependency management
 ament_auto_find_build_dependencies()
