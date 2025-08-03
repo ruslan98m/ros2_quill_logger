@@ -23,15 +23,6 @@ This library is optimized for realtime systems with configurable backend thread 
 - **Sleep Duration**: Configure backend thread response time
 - **Performance Mode**: Enable/disable realtime optimizations
 
-**Quick realtime setup:**
-```bash
-# Setup system for realtime (requires sudo)
-sudo ./scripts/setup_realtime.sh
-
-# Use realtime configuration
-ros2 run quill_logger quill_logger_test_node --ros-args --params-file config/quill_logger_realtime_config.yaml
-```
-
 ## Quick Start
 
 ### Method 1: Automatic Replacement in Code (Recommended)
@@ -65,28 +56,11 @@ int main(int argc, char** argv)
 ```bash
 # Run the test node to see Quill logger in action
 ros2 run quill_logger quill_logger_test_node
-
-# Or run the simple example
-ros2 run quill_logger simple_node_example
 ```
 
 ## Installation
 
-### Method 1: APT Package (Recommended)
-
-Build and install the debian package:
-
-```bash
-# Build the package
-./scripts/build_deb.sh
-
-# Install the package
-sudo dpkg -i ../libquill-logger-dev_*.deb
-sudo dpkg -i ../quill-logger-demo_*.deb
-sudo apt-get install -f  # Install missing dependencies
-```
-
-### Method 2: From Source
+### From Source
 
 #### Prerequisites
 
@@ -99,8 +73,8 @@ sudo apt-get install -f  # Install missing dependencies
 
 ```bash
 # Clone the repository
-git clone https://github.com/ruslanmambetov/quill_logger.git
-cd quill_logger
+git clone https://github.com/ruslan98m/ros2_quill_logger.git
+cd ros2_quill_logger
 
 # Build
 source /opt/ros/humble/setup.bash
@@ -110,7 +84,9 @@ colcon build --packages-select quill_logger
 source install/setup.bash
 ```
 
-### Method 3: Automatic Replacement in Code (Recommended)
+### Using as ROS2 Package Dependency
+
+#### 1. Add Dependency
 
 In `package.xml`:
 ```xml
@@ -122,7 +98,7 @@ In `CMakeLists.txt`:
 find_package(quill_logger REQUIRED)
 ```
 
-### 2. Add Initialization to Code
+#### 2. Add Initialization to Code
 
 ```cpp
 #include <quill_logger/quill_logger.hpp>
@@ -132,14 +108,14 @@ auto logger = quill_logger::QuillLogger::getInstance();
 logger->initialize();
 ```
 
-### 3. Rebuild Project
+#### 3. Rebuild Project
 
 ```bash
 colcon build --packages-select your_package
 source install/setup.bash
 ```
 
-### 4. Test
+#### 4. Test
 
 ```bash
 ros2 run your_package your_node
@@ -217,7 +193,6 @@ Example output:
 ## Available Components
 
 - **`quill_logger_test_node`** - Test node for functionality verification
-- **`simple_node_example`** - Example of automatic replacement
 
 ## Testing
 
@@ -225,4 +200,37 @@ The library includes comprehensive unit tests to ensure reliability and performa
 
 ### Running Tests
 
+```bash
+# Run all tests
+colcon test --packages-select quill_logger
+
+# Run specific test
+colcon test --packages-select quill_logger --ctest-args -R test_quill_logger
+
+# View test results
+colcon test-result --all
 ```
+
+### Test Coverage
+
+- **Unit Tests**: Core functionality testing
+- **Integration Tests**: ROS2 interface testing  
+- **Performance Tests**: Benchmarking and performance validation
+- **Simple Tests**: Basic functionality verification
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- [Quill](https://github.com/odygrd/quill) - High-performance logging library
+- [ROS2](https://ros.org/) - Robot Operating System 2
