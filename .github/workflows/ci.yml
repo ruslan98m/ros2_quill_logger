@@ -7,15 +7,10 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        ros-distro: [humble, iron]
-        compiler: [gcc]
-    
     container:
-      image: osrf/ros:${{ matrix.ros-distro }}-desktop
+      image: osrf/ros:humble-desktop
       options: --user root
     
     steps:
@@ -45,54 +40,17 @@ jobs:
 
     - name: Build package
       run: |
-        source /opt/ros/${{ matrix.ros-distro }}/setup.bash
+        . /opt/ros/humble/setup.sh
         colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    strategy:
-      matrix:
-        ros-distro: [humble]
-    
-    container:
-      image: osrf/ros:${{ matrix.ros-distro }}-desktop
-      options: --user root
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Install dependencies
+    - name: Run tests
       run: |
-        apt-get update
-        apt-get install -y \
-          build-essential \
-          cmake \
-          git \
-          pkg-config \
-          python3-colcon-common-extensions
-
-    - name: Install Quill library
-      run: |
-        # Clone and build Quill from source
-        git clone https://github.com/odygrd/quill.git
-        cd quill
-        mkdir build && cd build
-        cmake .. -DCMAKE_BUILD_TYPE=Release
-        make -j$(nproc)
-        make install
-        ldconfig
-
-    - name: Build and test
-      run: |
-        source /opt/ros/${{ matrix.ros-distro }}/setup.bash
-        colcon build --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
-        . install/setup.bash
+        . /opt/ros/humble/setup.sh
+        . install/setup.sh
         colcon test --event-handlers console_direct+
 
     - name: Check test results
       run: |
-        source /opt/ros/${{ matrix.ros-distro }}/setup.bash
-        . install/setup.bash
+        . /opt/ros/humble/setup.sh
+        . install/setup.sh
         colcon test-result --all 
