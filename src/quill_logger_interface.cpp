@@ -73,95 +73,87 @@ void QuillLoggerInterface::ros2LogOutputHandler(const rcutils_log_location_t* lo
     return;
   }
 
-  try {
-    auto quill_logger = logger_instance_->getLogger();
-    if (!quill_logger) {
-      return;
-    }
+  auto quill_logger = logger_instance_->getLogger();
+  if (!quill_logger) {
+    return;
+  }
 
-    // Convert ROS2 severity to Quill log level
-    quill::LogLevel quill_level;
-    switch (severity) {
-      case RCUTILS_LOG_SEVERITY_DEBUG:
-        quill_level = quill::LogLevel::Debug;
-        break;
-      case RCUTILS_LOG_SEVERITY_INFO:
-        quill_level = quill::LogLevel::Info;
-        break;
-      case RCUTILS_LOG_SEVERITY_WARN:
-        quill_level = quill::LogLevel::Warning;
-        break;
-      case RCUTILS_LOG_SEVERITY_ERROR:
-        quill_level = quill::LogLevel::Error;
-        break;
-      case RCUTILS_LOG_SEVERITY_FATAL:
-        quill_level = quill::LogLevel::Critical;
-        break;
-      default:
-        quill_level = quill::LogLevel::Info;
-        break;
-    }
+  // Convert ROS2 severity to Quill log level
+  quill::LogLevel quill_level;
+  switch (severity) {
+    case RCUTILS_LOG_SEVERITY_DEBUG:
+      quill_level = quill::LogLevel::Debug;
+      break;
+    case RCUTILS_LOG_SEVERITY_INFO:
+      quill_level = quill::LogLevel::Info;
+      break;
+    case RCUTILS_LOG_SEVERITY_WARN:
+      quill_level = quill::LogLevel::Warning;
+      break;
+    case RCUTILS_LOG_SEVERITY_ERROR:
+      quill_level = quill::LogLevel::Error;
+      break;
+    case RCUTILS_LOG_SEVERITY_FATAL:
+      quill_level = quill::LogLevel::Critical;
+      break;
+    default:
+      quill_level = quill::LogLevel::Info;
+      break;
+  }
 
-    // Format the message
-    std::string formatted_msg;
-    if (args && format) {
-      // Use vsnprintf to format the message
-      va_list args_copy;
+  // Format the message
+  std::string formatted_msg;
+  if (args && format) {
+    // Use vsnprintf to format the message
+    va_list args_copy;
+    va_copy(args_copy, *args);
+
+    // First, determine the required buffer size
+    int size = vsnprintf(nullptr, 0, format, args_copy);
+    va_end(args_copy);
+
+    if (size > 0) {
+      std::vector<char> buffer(size + 1);
       va_copy(args_copy, *args);
-
-      // First, determine the required buffer size
-      int size = vsnprintf(nullptr, 0, format, args_copy);
+      vsnprintf(buffer.data(), buffer.size(), format, args_copy);
       va_end(args_copy);
-
-      if (size > 0) {
-        std::vector<char> buffer(size + 1);
-        va_copy(args_copy, *args);
-        vsnprintf(buffer.data(), buffer.size(), format, args_copy);
-        va_end(args_copy);
-        formatted_msg = std::string(buffer.data());
-      }
-    } else if (format) {
-      formatted_msg = std::string(format);
+      formatted_msg = std::string(buffer.data());
     }
+  } else if (format) {
+    formatted_msg = std::string(format);
+  }
 
-    // Create a complete message with location info
-    std::stringstream full_msg;
-    if (location && location->function_name) {
-      full_msg << "[" << location->function_name;
-      if (location->line_number > 0) {
-        full_msg << ":" << location->line_number;
-      }
-      full_msg << "] ";
+  // Create a complete message with location info
+  std::stringstream full_msg;
+  if (location && location->function_name) {
+    full_msg << "[" << location->function_name;
+    if (location->line_number > 0) {
+      full_msg << ":" << location->line_number;
     }
-    full_msg << formatted_msg;
+    full_msg << "] ";
+  }
+  full_msg << formatted_msg;
 
-    // Log using Quill
-    switch (quill_level) {
-      case quill::LogLevel::Debug:
-        LOG_DEBUG(quill_logger, "{}", full_msg.str());
-        break;
-      case quill::LogLevel::Info:
-        LOG_INFO(quill_logger, "{}", full_msg.str());
-        break;
-      case quill::LogLevel::Warning:
-        LOG_WARNING(quill_logger, "{}", full_msg.str());
-        break;
-      case quill::LogLevel::Error:
-        LOG_ERROR(quill_logger, "{}", full_msg.str());
-        break;
-      case quill::LogLevel::Critical:
-        LOG_CRITICAL(quill_logger, "{}", full_msg.str());
-        break;
-      default:
-        LOG_INFO(quill_logger, "{}", full_msg.str());
-        break;
-    }
-
-  } catch (const std::exception& e) {
-    // Fallback to original handler on error
-    if (original_handler_) {
-      original_handler_(location, severity, name, timestamp, format, args);
-    }
+  // Log using Quill
+  switch (quill_level) {
+    case quill::LogLevel::Debug:
+      LOG_DEBUG(quill_logger, "{}", full_msg.str());
+      break;
+    case quill::LogLevel::Info:
+      LOG_INFO(quill_logger, "{}", full_msg.str());
+      break;
+    case quill::LogLevel::Warning:
+      LOG_WARNING(quill_logger, "{}", full_msg.str());
+      break;
+    case quill::LogLevel::Error:
+      LOG_ERROR(quill_logger, "{}", full_msg.str());
+      break;
+    case quill::LogLevel::Critical:
+      LOG_CRITICAL(quill_logger, "{}", full_msg.str());
+      break;
+    default:
+      LOG_INFO(quill_logger, "{}", full_msg.str());
+      break;
   }
 }
 
